@@ -1,0 +1,29 @@
+{
+  "skill_name": "context-management-architecture",
+  "evals": [
+    {
+      "id": "zero-to-one-support-agent",
+      "prompt": "我要做一个电商客服 agent，能回答政策、查订单、发起退款并让用户确认。请设计上下文管理架构。",
+      "expected_output": "回答应先给 Discovery Brief 或明确默认假设，再给六层上下文分配、per-turn/session/tool/artifact/action schema、preview→confirmation→apply 数据流、隐私边界、刷新恢复、并发/幂等测试与观测指标；不应把订单、政策全文、用户 profile 或退款动作全塞进 prompt。",
+      "files": []
+    },
+    {
+      "id": "review-existing-prompt-bloat",
+      "prompt": "帮我审查一个现有 agent：它每轮把完整用户 profile、最近 100 条消息、所有工具返回 JSON、当前页面事件都拼进 system prompt；写操作靠用户回复“确认”后直接执行。请给重构建议。",
+      "expected_output": "回答应以 findings 开头，指出动态内容污染 stable instructions、历史重复注入、易变事实过期、工具 JSON 泄露、前端事件污染模型上下文、自然语言确认高风险写操作等问题，并给出最小重构方案：per-turn envelope、session state、read tools、artifact/action store、idempotency key、脱敏 payload、回归测试和观测指标。",
+      "files": []
+    },
+    {
+      "id": "memory-scope-handoff",
+      "prompt": "我们要重点设计 agent 的长期记忆：怎么从对话抽取记忆、存到向量库还是 KV、怎么删除和评估。请从上下文管理角度帮我做方案。",
+      "expected_output": "回答应识别主体任务属于完整长期记忆系统，说明这里只负责 memory projection 与上下文注入边界；如继续回答，也应保持在边界层，不展开完整抽取、存储、检索、删除和评估方法论。",
+      "files": []
+    },
+    {
+      "id": "frontend-streaming-handoff",
+      "prompt": "我的主要问题是 agent 调工具时前端怎么展示 work panel、streaming steps、artifact 卡片和错误状态。请设计完整体验。",
+      "expected_output": "回答应识别主体任务属于完整前端流式体验；这里只补充模型 payload 与 frontend payload 分离、artifact/action id、脱敏和哪些事件不应回灌模型，不展开完整 work panel 和交互设计。",
+      "files": []
+    }
+  ]
+}
