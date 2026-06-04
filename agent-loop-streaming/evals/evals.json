@@ -1,0 +1,59 @@
+{
+  "skill_name": "agent-loop-streaming",
+  "evals": [
+    {
+      "id": "vague-designer-impression",
+      "prompt": "我在设计一个智能体产品，只知道不想让用户一直看 spinner，希望能看到 agent loop 流式输出，但我不清楚具体应该设计哪些状态和界面。请帮我梳理。",
+      "expected_output": "回答应先面向设计者解释 agent loop 流式体验的用户价值，把模糊印象拆成任务复杂度、用户风险、可见阶段、最终产物、确认边界和失败恢复，再给出默认 MVP 方案和后续需要确认的问题。",
+      "files": []
+    },
+    {
+      "id": "designer-to-coding-agent",
+      "prompt": "我已经确定我的 agent 会检索资料、调用工具、生成报告卡片，并且有一个提交动作。请把前端 agent loop 流式体验整理成 Codex/Cursor Agent 可以直接实现的任务。",
+      "expected_output": "回答应把设计决策翻译成 coding agent brief，包含组件、事件到 UI 映射、状态机、work step 合并、artifact schema、confirmation flow、安全脱敏和验收标准。",
+      "files": []
+    },
+    {
+      "id": "loop-intermediate-text",
+      "prompt": "我的 agent 有时会先输出一句话，然后又调用工具，工具回来后再继续回答。前端现在把前面那句话当成最终回答，体验很混乱。应该怎么设计？",
+      "expected_output": "回答应说明模型一次响应不一定是最终回答，区分 loop narration/intermediate text 和 final assistant response，建议 provisional text 先展示、后续出现 tool call 时迁移到 work panel，并以 RUN_FINISHED 或等价事件判断整个 loop 结束。",
+      "files": []
+    },
+    {
+      "id": "application-event-layer",
+      "prompt": "我准备直接把 OpenAI/Anthropic 的 streaming event 发给前端展示，这样是不是最快？如果要做成产品级 agent loop UI，应该怎么处理？",
+      "expected_output": "回答应说明前端不应直接消费模型厂商原始事件，而应由后端 agent loop 转换成应用侧事件；列出 RUN_STARTED、TEXT_MESSAGE_CONTENT、TOOL_CALL_START/ARGS/END/RESULT、RUN_FINISHED 等事件，并说明工具状态按 tool_call_id 更新同一个 work item。",
+      "files": []
+    },
+    {
+      "id": "pm-ux-brief",
+      "prompt": "我是一个产品经理，想做一个 AI 旅行规划 agent。用户提交需求后 agent 会查航班酒店、生成行程卡片、让用户确认预算。帮我设计前端 agent loop 流式体验。",
+      "expected_output": "回答应以产品体验为主，先帮助产品经理判断用户不确定性和可见阶段，再包含屏幕区域、状态分层、流式顺序、work panel、artifact card、确认动作、状态文案和可交给代码助手的实现 brief，而不是只讲 SSE/WebSocket 协议。",
+      "files": []
+    },
+    {
+      "id": "indie-vibe-coding",
+      "prompt": "我在 vibe coding 一个 AI CRM assistant，现在只有一个 spinner。它会查客户记录、生成跟进邮件草稿、确认后发送。给我一份可以直接让代码助手实现的需求。",
+      "expected_output": "回答应输出结构化 vibe coding brief，覆盖目标用户、智能体能力、页面结构、状态文案、事件到 UI 映射、artifact/确认区、隐私边界、代码代理任务边界和验收标准。",
+      "files": []
+    },
+    {
+      "id": "artifact-first-product",
+      "prompt": "我的 agent 最终主要生成一张报告卡片，不是长文本。现在报告卡片被聊天文本挤到很下面，体验很差。怎么改？",
+      "expected_output": "回答应建议 artifact 独立区域、assistant 文本降级为解释和下一步、work panel 只展示过程、移动端全宽展示、action 按钮靠近 artifact，并给出实现要点。",
+      "files": []
+    },
+    {
+      "id": "trust-and-side-effects",
+      "prompt": "我的 AI agent 可以帮用户提交售后工单和发邮件。前端流式过程怎么设计才能让用户知道哪些还只是预览，哪些已经真的提交了？",
+      "expected_output": "回答应强调 preview 与 side effect 分离、确认前阻塞执行、状态文案、提交中/成功/失败状态、可追踪信息、安全 payload 和错误恢复。",
+      "files": []
+    },
+    {
+      "id": "diagnose-bad-loop-ux",
+      "prompt": "我们现在把每个 tool call 的 JSON 都显示在聊天里，用户觉得很吓人；而且最终答案和中间过程混在一起。请给改版方案。",
+      "expected_output": "回答应识别问题是信息层级和信任问题，提出隐藏原始 JSON、工具名映射成用户语言、work panel 承载过程、final answer 分离、artifact 结构化和验收场景。",
+      "files": []
+    }
+  ]
+}
