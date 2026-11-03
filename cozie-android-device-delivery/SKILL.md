@@ -1,36 +1,15 @@
 ---
 name: cozie-android-device-delivery
-description: Cozie 项目的用户级交付偏好：每次 App 修改并检查通过后构建真实后端 Android 包，安装到用户连接的 Xiaomi 真机；不自动更新模拟器。用于 deepcozy/lab_mobile 的 App 修改交付或明确请求的真机安装。
+description: Cozie App 修改检查通过后，按已确认偏好构建真实后端 Android 包并安装到连接的 Xiaomi 真机。
 ---
 
 # Cozie Android 真机交付
 
-用户于 2026-11-02 确认：后续 Cozie App 修改完成并检查通过后，构建连接真实
-后端的 Android 安装包，直接安装到用户连接的 Xiaomi 手机，保留现有数据。
-不再自动启动或更新模拟器。这是持续交付授权，同一已确认任务无需重复询问。
-纯文档、指令或技能修改不触发 App 构建安装。用户当次另有要求时遵从当次要求。
-
-## 执行边界
-
-- 仅适用于 `deepcozy/lab_mobile` 及其关联工作树，不扩展到其他项目。
-- 先完成项目要求的相关检查和本地提交，再构建安装。此偏好不授权推送或发布。
-- 可复用当前工作树 `.agents/skills/cozie-android-refresh/SKILL.md` 的 SDK、JDK、
-  Gradle 和 APK 构建步骤；其中默认选择模拟器及强制停留登录页的规则不适用于
-  本真机交付偏好。不要修改项目技能以覆盖其他协作者的流程。
-
-## 构建和安装
-
-- 每次用 `adb devices -l` 重新确认设备。选择已连接、已授权的 Xiaomi 真机，
-  排除 `emulator-*`；所有设备命令显式指定 `-s`。已知用户手机型号为
-  `25098PN5AC`，仅作识别线索，不假定设备始终在线。多个候选无法区分时询问。
-- 若手机未连接、未授权或 USB 安装被拒绝，说明具体阻塞并保留构建产物；
-  不改用模拟器、不卸载 App、不清空数据，也不循环重试安装提示。
-- 从选定手机读取 ABI，构建包含当前代码的 Release APK。使用真实后端、
-  `EXPO_PUBLIC_ENABLE_MOCK_ACCOUNT=false`；真机设置
-  `EXPO_PUBLIC_START_AT_LOGIN=false`，不为交付强制重新登录或删除现有会话。
-- 若环境标志变化，按项目构建技能强制重新生成 JS bundle，避免复用模拟器包。
-- 构建成功后对选定手机执行 `adb -s <device> install -r <apk>`，等待实际成功。
-  签名冲突等问题先报告，不用卸载或清数据绕过。
-- 安装后核对包信息和安装结果；仅在用户要求或任务验证需要时启动 App。
-  启动成功、安装成功与改动后的实际页面验收分别报告，不相互替代。
-- 汇报本地提交、构建结果、目标手机、安装结果及验证限制。
+- 适用于 `deepcozy/lab_mobile` 及关联工作树。App 修改完成、检查通过并本地提交后构建安装；这是持续授权，无需重复询问。
+- 纯文档、指令和 Skill 修改不构建 App。用户当次要求优先；本偏好不授权推送或发布。
+- 每次发现当前设备，选择在线、已授权的 Xiaomi，排除模拟器；型号 `25098PN5AC` 仅作线索，多个候选无法区分时询问。
+- 使用真实后端：`EXPO_PUBLIC_ENABLE_MOCK_ACCOUNT=false`、`EXPO_PUBLIC_START_AT_LOGIN=false`，保留数据和现有会话。
+- 不自动启动或更新模拟器；手机未连接、未授权或拒绝安装时报告阻塞并保留已有产物，不换设备、不循环重试提示。
+- 签名冲突先报告，不通过卸载或清数据绕过。仅在用户要求或任务验证需要时启动 App。
+- SDK、JDK、ABI、预构建、bundle 刷新及安装验证，按当前工作树 `.agents/skills/cozie-app-workflow/references/android.md` 执行；不将个人设备偏好复制到项目通用流程。
+- 分别汇报提交、构建、目标手机、安装结果、页面验证和未验证项。

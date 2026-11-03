@@ -113,7 +113,7 @@ TOOL_CALL_RESULT -> completed/failed: 工具执行完成或失败
 
 1. text delta 刚出现时，前端先临时展示为 provisional assistant text。
 2. 如果后续出现 function/tool call，把这段 text 移入 work panel。
-3. 如果 response completed 且没有 function/tool call，把这段 text commit 为 final assistant bubble。
+3. 如果 response completed 且没有 function/tool call，保留为待定文本；只有 run 已结束或收到明确最终回答信号时才 commit 为 final assistant bubble。
 4. `RUN_FINISHED` 是判断整个 agent loop 不会继续的终止信号。
 
 ## Payload 安全边界
@@ -123,7 +123,7 @@ TOOL_CALL_RESULT -> completed/failed: 工具执行完成或失败
 - 不发送完整 tool arguments，除非用户已经输入且需要回显。
 - 不发送 secret、token、内部 prompt、隐藏 reasoning、完整数据库记录。
 - 只发送 UI 渲染需要的安全摘要。
-- 任何写入、发送、提交、删除都要有 preview 和 confirmation。
+- 写入、发送、提交、删除按现有授权与产品规则执行；需要确认时先展示 preview，已授权动作不重复阻塞。
 
 可以发送：用户可见 title/status、安全计数、来源摘要、artifact schema、错误摘要、side effect 是否已执行。
 

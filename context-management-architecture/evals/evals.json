@@ -4,7 +4,7 @@
     {
       "id": "zero-to-one-support-agent",
       "prompt": "我要做一个电商客服 agent，能回答政策、查订单、发起退款并让用户确认。请设计上下文管理架构。",
-      "expected_output": "回答应先给 Discovery Brief 或明确默认假设，再给六层上下文分配、per-turn/session/tool/artifact/action schema、preview→confirmation→apply 数据流、隐私边界、刷新恢复、并发/幂等测试与观测指标；不应把订单、政策全文、用户 profile 或退款动作全塞进 prompt。",
+      "expected_output": "回答应明确必要假设，说明上下文归属、所需 schema、退款的预览和确认流程、恢复与幂等验证；不把订单、政策全文、profile 或动作状态全部塞进 prompt，不要求固定章节数量。",
       "files": []
     },
     {
@@ -23,6 +23,18 @@
       "id": "frontend-streaming-handoff",
       "prompt": "我的主要问题是 agent 调工具时前端怎么展示 work panel、streaming steps、artifact 卡片和错误状态。请设计完整体验。",
       "expected_output": "回答应识别主体任务属于完整前端流式体验；这里只补充模型 payload 与 frontend payload 分离、artifact/action id、脱敏和哪些事件不应回灌模型，不展开完整 work panel 和交互设计。",
+      "files": []
+    },
+    {
+      "id": "focused-context-duplication",
+      "prompt": "模型请求把同一段工具结果在 history 和当前 payload 各放一次。只审查这个重复问题。",
+      "expected_output": "定位重复来源，建议保留一处必要注入并验证连续对话仍完整；不展开完整需求问卷或七部分架构报告。",
+      "files": []
+    },
+    {
+      "id": "authorized-draft-write",
+      "prompt": "产品已经获得自动保存草稿的授权。上下文架构如何记录保存与失败重试？",
+      "expected_output": "保存最小状态和结果引用，定义重复执行防护与错误恢复，复用已有授权；不要求每次预览或重新确认。",
       "files": []
     }
   ]

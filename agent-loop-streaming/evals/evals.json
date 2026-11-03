@@ -54,6 +54,18 @@
       "prompt": "我们现在把每个 tool call 的 JSON 都显示在聊天里，用户觉得很吓人；而且最终答案和中间过程混在一起。请给改版方案。",
       "expected_output": "回答应识别问题是信息层级和信任问题，提出隐藏原始 JSON、工具名映射成用户语言、work panel 承载过程、final answer 分离、artifact 结构化和验收场景。",
       "files": []
+    },
+    {
+      "id": "focused-tool-row-fix",
+      "prompt": "同一次工具调用的 start 和 result 在 UI 中生成两行。只给这个问题的修复建议。",
+      "expected_output": "检查调用 ID 与 reducer 合并逻辑，给出局部修复及验证同一次调用只有一行的方法；不输出完整产品方案或重设计页面。",
+      "files": []
+    },
+    {
+      "id": "authorized-autosave",
+      "prompt": "用户已开启自动保存草稿。agent 完成草稿后需要保存并显示结果，如何设计进度反馈？",
+      "expected_output": "复用已授权的自动保存流程，显示保存中、成功或失败状态；不额外要求确认，不将保存中误报为已保存。",
+      "files": []
     }
   ]
 }
