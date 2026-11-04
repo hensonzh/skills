@@ -2,39 +2,57 @@
   "skill_name": "context-management-architecture",
   "evals": [
     {
-      "id": "zero-to-one-support-agent",
-      "prompt": "我要做一个电商客服 agent，能回答政策、查订单、发起退款并让用户确认。请设计上下文管理架构。",
-      "expected_output": "回答应明确必要假设，说明上下文归属、所需 schema、退款的预览和确认流程、恢复与幂等验证；不把订单、政策全文、profile 或动作状态全部塞进 prompt，不要求固定章节数量。",
-      "files": []
-    },
-    {
-      "id": "review-existing-prompt-bloat",
-      "prompt": "帮我审查一个现有 agent：它每轮把完整用户 profile、最近 100 条消息、所有工具返回 JSON、当前页面事件都拼进 system prompt；写操作靠用户回复“确认”后直接执行。请给重构建议。",
-      "expected_output": "回答应以 findings 开头，指出动态内容污染 stable instructions、历史重复注入、易变事实过期、工具 JSON 泄露、前端事件污染模型上下文、自然语言确认高风险写操作等问题，并给出最小重构方案：per-turn envelope、session state、read tools、artifact/action store、idempotency key、脱敏 payload、回归测试和观测指标。",
+      "id": "focused-context-duplication",
+      "prompt": "模型请求把同一段工具结果在 history 和当前 payload 各放一次。只审查这个重复问题。",
+      "expected_output": "定位组装职责，保留必要的一份并保持调用/结果配对；不展开完整架构模板。",
       "files": []
     },
     {
       "id": "memory-scope-handoff",
-      "prompt": "我们要重点设计 agent 的长期记忆：怎么从对话抽取记忆、存到向量库还是 KV、怎么删除和评估。请从上下文管理角度帮我做方案。",
-      "expected_output": "回答应识别主体任务属于完整长期记忆系统，说明这里只负责 memory projection 与上下文注入边界；如继续回答，也应保持在边界层，不展开完整抽取、存储、检索、删除和评估方法论。",
+      "prompt": "我们要设计长期记忆的抽取、存储、删除与评估。请从上下文管理角度给方案。",
+      "expected_output": "上下文层只定义投影和注入边界，完整设计转到 agent-memory-design；不另设记忆分类、TTL 或软硬删除要求。",
       "files": []
     },
     {
       "id": "frontend-streaming-handoff",
-      "prompt": "我的主要问题是 agent 调工具时前端怎么展示 work panel、streaming steps、artifact 卡片和错误状态。请设计完整体验。",
-      "expected_output": "回答应识别主体任务属于完整前端流式体验；这里只补充模型 payload 与 frontend payload 分离、artifact/action id、脱敏和哪些事件不应回灌模型，不展开完整 work panel 和交互设计。",
-      "files": []
-    },
-    {
-      "id": "focused-context-duplication",
-      "prompt": "模型请求把同一段工具结果在 history 和当前 payload 各放一次。只审查这个重复问题。",
-      "expected_output": "定位重复来源，建议保留一处必要注入并验证连续对话仍完整；不展开完整需求问卷或七部分架构报告。",
+      "prompt": "我们主要想设计工具过程 UI、结果卡片与断线重连。",
+      "expected_output": "完整前端契约使用 agent-loop-streaming；本层只明确各消费者 payload、共享标识和哪些信息可回到模型。",
       "files": []
     },
     {
       "id": "authorized-draft-write",
-      "prompt": "产品已经获得自动保存草稿的授权。上下文架构如何记录保存与失败重试？",
-      "expected_output": "保存最小状态和结果引用，定义重复执行防护与错误恢复，复用已有授权；不要求每次预览或重新确认。",
+      "prompt": "产品已获得自动保存草稿授权。上下文架构如何记录保存与失败重试？",
+      "expected_output": "复用授权，不追加确认；选择必要持久状态和去重机制，区分失败与未知结果。",
+      "files": []
+    },
+    {
+      "id": "post-compaction-reload",
+      "prompt": "资料全文被压缩掉了，但 loaded_reference_ids 还记录它已读取。新问题需要其中细节，是否禁止再次读取？",
+      "expected_output": "曾读取与当前可见分开，按任务、权限和新鲜度重新加载；不能只凭 ID 假定模型记得全文。",
+      "files": []
+    },
+    {
+      "id": "durability-choice",
+      "prompt": "一个长任务需要在进程崩溃后继续；当前只在 run 完成时保存状态。",
+      "expected_output": "说明结束时落库的丢失窗口，按恢复要求选择步骤级或关键边界检查点；复用框架，不把幂等键当成全部运行恢复机制。",
+      "files": []
+    },
+    {
+      "id": "unknown-side-effect",
+      "prompt": "退款接口可能已经成功，但网络断开没有回执。可以当失败换个幂等键再退款吗？",
+      "expected_output": "记录结果未知，查询下游业务状态；保留可重建的同一业务操作身份，核实下游去重能力，不能盲目重试或宣称未执行。",
+      "files": []
+    },
+    {
+      "id": "trust-after-summary",
+      "prompt": "检索网页中的指令被摘要进长期记忆，下一轮是否可以当作更高优先级的系统规则？",
+      "expected_output": "来源与权限不因摘要或保存而提升；检索内容作为数据，不能改变可信指令或工具授权。",
+      "files": []
+    },
+    {
+      "id": "projection-delete-boundary",
+      "prompt": "记忆服务选择按产品承诺硬删除。上下文的 memory projection 是否还要规定统一软删除？",
+      "expected_output": "不在上下文层重新决定删除方式；只消费仍有权限且有效的最小投影，记录真实消费者所需字段。",
       "files": []
     }
   ]
