@@ -1,4 +1,0 @@
-interface:
-  display_name: "文章协作"
-  short_description: "把模糊想法打磨成有观点有传播力的文章"
-  default_prompt: "Use $article-collaboration to turn my rough idea into a clear, human-sounding article draft."
